@@ -1,10 +1,10 @@
-streamlit==1.37.1
+streamlit
 moviepy==2.0.0
-pillow==10.4.0
-opencv-python-headless==4.10.0.84
+pillow
+opencv-python-headless
 
-faster-whisper==1.0.3
-ctranslate2==4.6.2
+faster-whisper
+ctranslate2
 
-deep-translator==1.11.4
-numpy==1.26.1
+deep-translator
+numpy
