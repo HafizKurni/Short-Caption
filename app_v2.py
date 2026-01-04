@@ -10,6 +10,32 @@ from PIL import Image
 
 from utils_render import render_text_rgba, apply_logo_opacity
 
+# List bahasa (nama -> kode) yang umum dan stabil di GoogleTranslator (deep-translator)
+LANG_OPTIONS = {
+    "English": "en",
+    "Bahasa Indonesia": "id",
+    "Bahasa Melayu": "ms",
+    "Arabic": "ar",
+    "Chinese (Simplified)": "zh-CN",
+    "Chinese (Traditional)": "zh-TW",
+    "Japanese": "ja",
+    "Korean": "ko",
+    "French": "fr",
+    "German": "de",
+    "Spanish": "es",
+    "Portuguese": "pt",
+    "Italian": "it",
+    "Dutch": "nl",
+    "Russian": "ru",
+    "Turkish": "tr",
+    "Thai": "th",
+    "Vietnamese": "vi",
+    "Hindi": "hi",
+    "Bengali": "bn",
+    "Tamil": "ta",
+    "Urdu": "ur",
+}
+
 st.set_page_config(page_title="Video Caption + Translate + Watermark (MoviePy v2)", layout="wide")
 st.title("🎬 Video → Transcribe → Translate → Caption + Watermark (Streamlit + MoviePy v2)")
 
@@ -54,8 +80,18 @@ with colL:
     language_hint = st.text_input("Optional: language hint (contoh: 'id', 'en'). Kosongkan untuk auto-detect.", value="")
 
     st.subheader("2) Translate Target")
-    # deep-translator GoogleTranslator memakai kode bahasa (contoh: 'id','en','ms','ar','zh-CN')
-    target_lang = st.text_input("Target language code", value="en")
+
+    lang_name = st.selectbox(
+        "Target language",
+        options=list(LANG_OPTIONS.keys()),
+        index=list(LANG_OPTIONS.keys()).index("English")  # default English
+    )
+    target_lang = LANG_OPTIONS[lang_name]
+    
+    st.caption(f"Selected: {lang_name} ({target_lang})")
+
+    with st.expander("See supported language codes"):
+    st.json(LANG_OPTIONS)
 
     st.subheader("3) Caption Style")
     font_size = st.slider("Font size", 18, 120, 52, 2)
