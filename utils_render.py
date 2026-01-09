@@ -1,6 +1,8 @@
 from PIL import Image, ImageDraw, ImageFont
 import textwrap
 import numpy as np
+import cv2
+import os
 
 def hex_to_rgba(hex_color: str, alpha: int = 255):
     hex_color = hex_color.lstrip("#")
@@ -95,3 +97,69 @@ def apply_logo_opacity(logo_pil: Image.Image, opacity: float):
     r, g, b, a = logo.split()
     a = a.point(lambda px: int(px * opacity))
     return Image.merge("RGBA", (r, g, b, a))
+
+import subprocess
+import os
+
+def split_video_ffmpeg(input_path, start_ts, end_ts, clip_duration, output_folder="output"):
+    """
+    Splits video using FFmpeg. Fast, preserves audio, and follows the 45s discard rule.
+    """
+    
+    def get_seconds(ts):
+        if isinstance(ts, (int, float)): return float(ts)
+        parts = list(map(int, ts.split(':')))
+        if len(parts) == 2: return parts[0] * 60 + parts[1]
+        if len(parts) == 3: return parts[0] * 3600 + parts[1] * 60 + parts[2]
+        return float(ts)
+
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+
+    start_sec = get_seconds(start_ts)
+    end_sec = get_seconds(end_ts)
+    current_ptr = start_sec
+    clip_count = 1
+
+    print(f"Using FFmpeg to process: {input_path}")
+
+    while True:
+        time_left = end_sec - current_ptr
+        
+        # 45-second discard rule
+        if time_left < 45:
+            print(f"Stopping: Only {time_left:.2f}s left (below 45s threshold).")
+            break
+
+        output_name = os.path.join(output_folder, f"segment_{clip_count}.mp4")
+
+        # FFmpeg Command Explanation:
+        # -ss: Start time
+        # -t: Duration
+        # -i: Input file
+        # -c copy: "Stream Copy" - no re-encoding (Instant speed + Audio preserved)
+        # -avoid_negative_ts make_zero: Helps sync audio/video timing on cuts
+        cmd = [
+            'ffmpeg',
+            '-ss', str(current_ptr),
+            '-t', str(clip_duration),
+            '-i', input_path,
+            '-c', 'copy',
+            '-avoid_negative_ts', 'make_zero',
+            output_name,
+            '-y', # Overwrite existing files
+            '-loglevel', 'error' # Keeps the console clean
+        ]
+
+        try:
+            print(f"Creating Clip {clip_count}: {current_ptr}s -> {current_ptr + clip_duration}s")
+            subprocess.run(cmd, check=True)
+        except subprocess.CalledProcessError as e:
+            print(f"Error processing clip {clip_count}: {e}")
+            break
+
+        current_ptr += clip_duration
+        clip_count += 1
+
+    print("\nProcess Complete. Audio should now be present in all clips.")
+    return True
