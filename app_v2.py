@@ -358,17 +358,17 @@ def pop_scale(t_local: float, duration: float, base: float = 1.0, peak: float = 
     return base + (peak - base) * tri
 
 
-def chunk_scale(t_local: float, dur: float, in_time: float = 0.14, out_time: float = 0.14,
-                base: float = 1.0, peak: float = 1.06) -> float:
-    if dur <= 0:
-        return base
-    if t_local < in_time:
-        x = max(0.0, min(1.0, t_local / in_time))
-        return base + (peak - base) * x
-    if t_local > dur - out_time:
-        x = max(0.0, min(1.0, (dur - t_local) / out_time))
-        return base + (peak - base) * x
-    return base
+# def chunk_scale(t_local: float, dur: float, in_time: float = 0.14, out_time: float = 0.14,
+#                 base: float = 1.0, peak: float = 1.06) -> float:
+#     if dur <= 0:
+#         return base
+#     if t_local < in_time:
+#         x = max(0.0, min(1.0, t_local / in_time))
+#         return base + (peak - base) * x
+#     if t_local > dur - out_time:
+#         x = max(0.0, min(1.0, (dur - t_local) / out_time))
+#         return base + (peak - base) * x
+#     return base
 
 
 def find_chunk_at_time(chunks: List[Dict], t: float) -> Optional[Dict]:
@@ -738,7 +738,7 @@ if render_btn:
                     .with_effects([
                         FadeIn(0.14),
                         FadeOut(0.14),
-                        Resize(lambda t, d=dur: chunk_scale(t, d, 0.14, 0.14, 1.0, 1.06))
+                        # Resize(lambda t, d=dur: chunk_scale(t, d, 0.14, 0.14, 1.0, 1.06))
                     ])
                 )
                 overlays.append(base_clip)
