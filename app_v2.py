@@ -518,24 +518,24 @@ with colL:
 
     st.subheader("2) Whisper")
     whisper_size = st.selectbox("Model size (Cloud-friendly)", ["tiny", "base", "small"], index=1)
-    language_hint = st.text_input("Optional language hint (e.g., id, en)", value="")
+    language_hint = st.text_input("Optional language hint (e.g., id, en)", value="en")
 
     st.subheader("3) Captions")
-    words_per_chunk = st.slider("Words per chunk", 2, 8, 4, 1)
+    words_per_chunk = st.slider("Words per chunk", 2, 8, 3, 1)
 
     enable_translate = st.checkbox("Translate captions (timing becomes approximate)", value=True)
     lang_keys = list(LANG_OPTIONS.keys())
-    lang_name = st.selectbox("Target language", options=lang_keys, index=lang_keys.index("English"))
+    lang_name = st.selectbox("Target language", options=lang_keys, index=lang_keys.index("Bahasa Melayu"))
     target_lang = LANG_OPTIONS[lang_name]
     # Store for font auto-pick (no UI change)
     st.session_state["target_lang"] = target_lang
 
     st.subheader("4) Style")
     base_color = st.color_picker("Base text color", "#FFFFFF")
-    highlight_color = st.color_picker("Highlight color", "#FFD400")
-    font_size = st.slider("Font size", 16, 90, 44, 1)
+    highlight_color = st.color_picker("Highlight color", "#FF8200")
+    font_size = st.slider("Font size", 16, 90, 64, 1)
 
-    stroke_width = st.slider("Stroke width", 0, 12, 3, 1)
+    stroke_width = st.slider("Stroke width", 0, 12, 2, 1)
     stroke_color = st.color_picker("Stroke color", "#000000")
 
     pop_peak = st.slider("Pop peak scale", 1.0, 1.6, 1.0, 0.02)
@@ -544,7 +544,7 @@ with colL:
     st.subheader("5) Position")
     y_mode = st.radio("Y mode", ["Percent", "Pixels"], index=0, horizontal=True)
     if y_mode == "Percent":
-        y_percent = st.slider("Caption Y (% from top)", 55, 95, 82, 1)
+        y_percent = st.slider("Caption Y (% from top)", 55, 82, 65, 1)
         y_pos_px = None
     else:
         y_pos_px = st.slider("Caption Y (px from top)", 0, 2000, 900, 10)

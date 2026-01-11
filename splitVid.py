@@ -1,11 +1,11 @@
 from utils_render import split_video_ffmpeg
 
 # --- YOUR PARAMETERS ---
-MY_VIDEO = "videoSplit/Gravity FallsS01E02.mp4"
-START_AT = "2:00"       
-END_AT = "21:10"        
+MY_VIDEO = "videoSplit/Gravity FallsS01E01.mp4"
+START_AT = "1:23"       
+END_AT = "22:37"        
 DURATION = 90.0        
-FOLDER = "videoSplit/EPS2_clips"    
+FOLDER = "videoSplit/EPS1_clips"    
     
 # --- EXECUTION ---
 print("Starting the video splitter...")
